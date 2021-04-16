@@ -9,7 +9,7 @@
 #endif
 class ESP8266WebServer;
 
-#include "CWebServer.h"
+#include "CWebServerBasic.h"
 #include <DNSServer.h>
 
 class CWifi
@@ -19,7 +19,7 @@ class CWifi
 public:
     static CWifi &getInstance()
     {
-        static CWifi S(CWebServer::getInstance());
+        static CWifi S(CWebServerBasic::getInstance());
         return S;
     }
 
@@ -27,7 +27,7 @@ public:
     void operator=(CWifi const &) = delete;
 
 private:
-    CWifi(CWebServer &_webserver);
+    CWifi(CWebServerBasic &_webserver);
     ~CWifi();
 //BASIC SINGLETON END
 
@@ -45,7 +45,7 @@ public:
     void wifiConnect();
     void handleSettingsUpdate();
 
-    CWebServer &getWebserver();
+    CWebServerBasic &getWebserver();
 
     void setResetPin(const uint8_t _pin);
     uint8_t getResetPin();
@@ -69,7 +69,7 @@ private:
     String* m_pPassword;
     bool m_isStaticIP;
 
-    CWebServer& m_WebServer;
+    CWebServerBasic& m_WebServer;
 
     bool m_isWIFIConnected;
     uint8_t m_WifiResetPin;

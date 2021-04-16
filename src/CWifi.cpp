@@ -2,7 +2,7 @@
 #include "Arduino.h"
 #include <ESP8266WiFi.h>
 
-#include "CWebServer.h"
+#include "CWebServerBasic.h"
 #include "ArduinoJson.h"
 #include "FS.h"
 
@@ -13,16 +13,16 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-CWifi::CWifi(CWebServer &_webserver) : m_WebServer(_webserver)
+CWifi::CWifi(CWebServerBasic &_webserver) : m_WebServer(_webserver)
 {
 }
 CWifi::~CWifi()
 {
 }
 
-CWebServer &CWifi::getWebserver()
+CWebServerBasic &CWifi::getWebserver()
 {
-    return CWebServer::getInstance();
+    return CWebServerBasic::getInstance();
 }
 
 void CWifi::setSSID(String *_pSSID)
@@ -188,7 +188,7 @@ void CWifi::run()
         CWifi::getInstance().getDNSServer()->processNextRequest();
     }
     
-    CWebServer::getInstance().getESP8266WebServer()->handleClient(); //Method for http request handleing
+    CWebServerBasic::getInstance().getESP8266WebServer()->handleClient(); //Method for http request handleing
     CWifi::getInstance().handleResetButton();                        //Method for observing WIFI reset button 
     ArduinoOTA.handle();
 }
