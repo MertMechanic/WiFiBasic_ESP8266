@@ -6,7 +6,12 @@
 #include "ArduinoJson.h"
 #include "FS.h"
 
+#include "CFileSystem.h"
 
+#include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
+#include <WiFiUdp.h>
+#include <ArduinoOTA.h>
 
 CWifi::CWifi(CWebServer &_webserver) : m_WebServer(_webserver)
 {
@@ -41,7 +46,6 @@ String *CWifi::getPassword()
 
 void CWifi::init(const uint8_t _resetPin)
 {
-    SPIFFS.begin();
     this->setResetPin(_resetPin);
     this->wifiConnect();
 }
@@ -66,50 +70,43 @@ void CWifi::wifiConnect()
 {
     WiFi.softAPdisconnect(true);
     WiFi.disconnect();
-    delay(1000);
+    delay(500);
     this->m_isInAPMode = false;
 
-    if (SPIFFS.exists("/config.json"))
+    const char *_ssid = "";
+    const char *_pass = "";
+    String str;
+    if (CFileSystem::getInstance().readFile("/config.json", &str))
     {
-        const char *_ssid = "";
-        const char *_pass = "";
-        File configFile = SPIFFS.open("/config.json", "r");
-        if (configFile)
+
+        DynamicJsonBuffer JsonBuffer;
+        JsonObject &jObject = JsonBuffer.parseObject(str);
+        if (jObject.success())
         {
-            size_t size = configFile.size();
-            std::unique_ptr<char[]> buf(new char[size]);
-            configFile.readBytes(buf.get(), size);
-            configFile.close();
+            _ssid = jObject["ssid"];
+            _pass = jObject["password"];
+            this->m_pSSID = new String(_ssid);
+            this->m_pPassword = new String(_pass);
 
-            DynamicJsonBuffer JsonBuffer;
-            JsonObject &jObject = JsonBuffer.parseObject(buf.get());
-            if (jObject.success())
+            Serial.print("Try to connect to:");
+            Serial.print(_ssid);
+
+            WiFi.mode(WIFI_STA);
+            WiFi.begin(_ssid, _pass);
+            this->m_isInAPMode = false;
+
+            while (WiFi.status() != WL_CONNECTED)
             {
-                _ssid = jObject["ssid"];
-                _pass = jObject["password"];
-                this->m_pSSID = new String(_ssid);
-                this->m_pPassword = new String(_pass);
-
-                Serial.print("Try to connect to:");
-                Serial.print(_ssid);
-
-                WiFi.mode(WIFI_STA);
-                WiFi.begin(_ssid, _pass);
-                this->m_isInAPMode = false;
-
-                unsigned long startTime = millis();
-                while (WiFi.status() != WL_CONNECTED)
+                delay(500);
+                Serial.println(".");
+                if (CWifi::handleResetButton())
                 {
-                    delay(500);
-                    Serial.println(".");
-                    if (CWifi::handleResetButton())
-                    {
-                        wifiConnect();
-                        break;
-                    }
+                    wifiConnect();
+                    break;
                 }
             }
         }
+        
     }
     if (WiFi.status() == WL_CONNECTED)
     {
@@ -161,9 +158,6 @@ void CWifi::wifiConnect()
         // provided IP to all DNS request
         this->m_dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
         this->m_dnsServer.start(DNS_PORT, "*", IPAddress(192,168,1,1));
-
-        
-
     }
 
     WiFi.printDiag(Serial);
@@ -196,14 +190,15 @@ void CWifi::run()
     
     CWebServer::getInstance().getESP8266WebServer()->handleClient(); //Method for http request handleing
     CWifi::getInstance().handleResetButton();                        //Method for observing WIFI reset button 
+    ArduinoOTA.handle();
 }
 
 //Listen to the Reset Button ... Interrupt everything and count 5 seconds 
 //if 5 seconds is finished - the wifi settings are resetete by deleteing the config file... 
 bool CWifi::handleResetButton()
 {
-
-    int count = 5;
+    
+    unsigned int count = 5;
     bool buttonPressed = false;
     //Count 5 times is button pressed - if yes - reset settings 
     for (size_t i = 0; i < count; i++)
@@ -236,13 +231,13 @@ bool CWifi::handleResetButton()
 
         this->m_isInAPMode = true;
 
-        if (SPIFFS.exists("/config.json"))
+        String str;
+        if (CFileSystem::getInstance().readFile("/config.json", &str))
         {
-            SPIFFS.remove("/config.json");
+            CFileSystem::getInstance().deleteFile("/config.json");
             Serial.println("Remove Config file...");
-            wifiConnect();
+            this->wifiConnect();
         }
-        return true;
     }
     else
     {

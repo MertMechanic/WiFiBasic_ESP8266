@@ -2,7 +2,7 @@
 
 #include "ESP8266WebServer.h"
 #include "CWebserverData.h"
-
+#include "ArduinoJson.h"
 
 class CWebServer 
 {
@@ -26,6 +26,7 @@ public:
 
     virtual void setupWebPageAPMode();
     virtual void setupWebPageNormalMode();
+
 
 private:
     ESP8266WebServer m_Webserver;
