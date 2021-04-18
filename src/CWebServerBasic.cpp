@@ -199,7 +199,7 @@ void CWebServerBasic::setupWebPageAPMode()
   // replay to all requests with same HTML
   this->getESP8266WebServer()->onNotFound(handleAPModeRootPage);
   setupAdditionalWebPageNormalMode();
-  this->getESP8266WebServer()->begin();
+  this->start();
 }
 
 /**
@@ -215,7 +215,7 @@ void CWebServerBasic::setupWebPageNormalMode()
   this->getESP8266WebServer()->on(
       "/dofirmwareupdate", HTTP_POST, handledofirmwareupdateCheckErrors, handledofirmwareupdate);
   this->setupAdditionalAPModeWebPages();
-  this->getESP8266WebServer()->begin();
+  this->start();
 }
 
 void CWebServerBasic::start()

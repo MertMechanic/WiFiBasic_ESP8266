@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ESP8266WebServer.h"
-#include "ArduinoJson.h"
 #include "WebServerDataBasic.h"
+#include "ArduinoJson.h"
 
 class CWebServerBasic 
 {
@@ -29,6 +29,8 @@ public:
 
     virtual void setupAdditionalAPModeWebPages();
     virtual void setupAdditionalWebPageNormalMode();
+
+    void start();
 
 private:
     ESP8266WebServer m_Webserver;
