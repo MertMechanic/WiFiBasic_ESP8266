@@ -1,6 +1,6 @@
 
 #include "CWebServerBasic.h"
-#include "CWifi.h"
+#include "CWifiBasic.h"
 
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
@@ -186,31 +186,42 @@ ESP8266WebServer *CWebServerBasic::getESP8266WebServer()
     return &this->m_Webserver;
 }
 
+/**
+ * @brief Setup Webserver Webpages - call setupAdditionalAPModeWebPages() it in your subclase to override the routes!
+ * 
+ */
 void CWebServerBasic::setupWebPageAPMode()
 {
-    this->getESP8266WebServer()->on("/", handleAPModeRootPage);
-    this->getESP8266WebServer()->on("/settings", HTTP_POST, handleAPModeSettingsUpdate);
+  Serial.println("setupWebPageAPMode()");
+  this->getESP8266WebServer()->on("/"         , HTTP_GET,   handleAPModeRootPage);
+  this->getESP8266WebServer()->on("/settings" , HTTP_POST,  handleAPModeSettingsUpdate);
 
-    // replay to all requests with same HTML
-    this->getESP8266WebServer()->onNotFound(handleAPModeRootPage);
-
-    this->setupAdditionalAPModeWebPages();
-    this->getESP8266WebServer()->begin();
+  // replay to all requests with same HTML
+  this->getESP8266WebServer()->onNotFound(handleAPModeRootPage);
+  setupAdditionalWebPageNormalMode();
+  this->getESP8266WebServer()->begin();
 }
 
-
+/**
+ * @brief Setup Webserver Webpages - call setupAdditionalWebPageNormalMode() it in your subclase to override the routes!
+ * 
+ */
 void CWebServerBasic::setupWebPageNormalMode()
 {
-    this->getESP8266WebServer()->on("/",HTTP_GET, handleRoot);
-    this->getESP8266WebServer()->on("/login", HTTP_GET, handleLogin);
-    this->getESP8266WebServer()->on("/update",HTTP_GET, handleUpdate);
-    this->getESP8266WebServer()->on(
-        "/dofirmwareupdate", HTTP_POST, handledofirmwareupdateCheckErrors,handledofirmwareupdate );
-
-    this->setupAdditionalWebPageNormalMode();
-    this->getESP8266WebServer()->begin();
+  Serial.println("setupWebPageNormalMode()");
+  this->getESP8266WebServer()->on("/"       , HTTP_GET, handleRoot);
+  this->getESP8266WebServer()->on("/login"  , HTTP_GET, handleLogin);
+  this->getESP8266WebServer()->on("/update" , HTTP_GET, handleUpdate);
+  this->getESP8266WebServer()->on(
+      "/dofirmwareupdate", HTTP_POST, handledofirmwareupdateCheckErrors, handledofirmwareupdate);
+  this->setupAdditionalAPModeWebPages();
+  this->getESP8266WebServer()->begin();
 }
 
+void CWebServerBasic::start()
+{
+  this->getESP8266WebServer()->begin();
+}
 
 void CWebServerBasic::setupAdditionalAPModeWebPages()
 {
