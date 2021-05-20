@@ -57,7 +57,7 @@ void handleAPModeSettingsUpdate()
 }
 
 
-void handleRoot()
+void handleRootPage()
 {
     //Configure your rootpage here ....
     Serial.println("try to send servus moiiiin...");
@@ -209,7 +209,7 @@ void CWebServerBasic::setupWebPageAPMode()
 void CWebServerBasic::setupWebPageNormalMode()
 {
   Serial.println("setupWebPageNormalMode()");
-  this->getESP8266WebServer()->on("/"       , HTTP_GET, handleRoot);
+  this->getESP8266WebServer()->on("/"       , HTTP_GET, handleRootPage);
   this->getESP8266WebServer()->on("/login"  , HTTP_GET, handleLogin);
   this->getESP8266WebServer()->on("/update" , HTTP_GET, handleUpdate);
   this->getESP8266WebServer()->on(
