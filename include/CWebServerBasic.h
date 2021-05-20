@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include "ESP8266WebServer.h"
 #include "WebServerDataBasic.h"
 #include "ArduinoJson.h"
@@ -17,7 +18,7 @@ public:
     CWebServerBasic(const CWebServerBasic &) = delete;
     void operator=(CWebServerBasic const &) = delete;
 
-private:
+protected:
     CWebServerBasic();
     ~CWebServerBasic();
 //Stingleton END

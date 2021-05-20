@@ -7,7 +7,7 @@
 #include <WiFi.h>
 #include "SPIFFS.h"
 #endif
-class ESP8266WebServer;
+
 
 #include "CWebServerBasic.h"
 #include <DNSServer.h>
@@ -26,7 +26,7 @@ public:
     CWifiBasic(const CWifiBasic &) = delete;
     void operator=(CWifiBasic const &) = delete;
 
-public:
+protected:
     CWifiBasic(CWebServerBasic &_webserver);
     ~CWifiBasic();
 //BASIC SINGLETON END

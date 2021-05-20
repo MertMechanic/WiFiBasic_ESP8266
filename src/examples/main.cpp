@@ -4,6 +4,8 @@
 
 //Preset routes are:
 
+//AP Mode IP = 192.168.0.1
+
 // in AP Mode:
 //  "/" for setup WIFI config
 
@@ -15,7 +17,7 @@
 
 
 CWifiBasic& wifi = CWifiBasic::getInstance();
-#define PIN_WIFI_RESET D0
+#define PIN_WIFI_RESET D8
 
 void setup() {
       Serial.begin(115200);
