@@ -145,7 +145,9 @@ R"=====(
     <h2 class="headline">ESP8266 WIFI Setup</h2>
     <p class="notice">
         Please Enter your WIFI data here... <br>
-        Bitte Fuegen sie Ihre Wlan zugangsdaten hier ein!
+        Enter a valid IP address for setting up a static IP - leave it 0.0.0.0 to getting a dynamic IP address. <br>
+        Bitte Fuegen sie Ihre Wlan zugangsdaten hier ein! <br>
+        Geben Sie eine valide Ip Adresse in das Feld ein, um eine statische IP Adresse zu vergeben - bei der Eingabe von 0.0.0.0 wird eine dynamische zugeteilt. <br>
     </p>
     <form>
 
@@ -156,6 +158,25 @@ R"=====(
         <div class="form__group field">
             <input type="password" class="form__field" placeholder="Password" name="password" id="password" required />
             <label for="password" class="form__label">Password</label>
+        </div>
+
+
+        <div class="form__group field">
+            <input type="text" minlength="7" maxlength="15" size="15" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$" 
+            class="form__field" placeholder="0.0.0.0" name="ipaddress" id="ipaddress" required>
+            <label for="ipaddress" class="form__label">IpAddress</label>
+        </div>
+
+        <div class="form__group field">
+            <input type="text" minlength="7" maxlength="15" size="15" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$" 
+            class="form__field" placeholder="0.0.0.0" name="subnetmask" id="subnetmask" required>
+            <label for="subnetmask" class="form__label">Subnetmask</label>
+        </div>
+
+        <div class="form__group field">
+            <input type="text" minlength="7" maxlength="15" size="15" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$" 
+            class="form__field" placeholder="0.0.0.0" name="gateway" id="gateway" required>
+            <label for="gateway" class="form__label">Gateway</label>
         </div>
 
 
@@ -196,7 +217,8 @@ R"=====(
         document.getElementById("noticeenglish").innerText = "Reload your Browser!";
         document.getElementById("noticegerman").innerText  = "Aktuallisieren Sie ihren Browser!";
     }
-
+</script>
+<script>
 
     function myFunction() {
 
@@ -204,12 +226,46 @@ R"=====(
 
 
         var ssid = document.getElementById("ssid").value;
+        console.log("SSID value is: " + ssid);
         var password = document.getElementById("password").value;
+        console.log("password is: " + password);
 
-        console.log("value is:" + ssid);
-        console.log("password is:" + password);
+        //*Getting Ipaddress
+        var ipaddress = document.getElementById("ipaddress").value;
+        if( ipaddress == "0.0.0.0" )
+        {
+            console.log("dynamic");
+        }
+        else
+        {
+            console.log("ipaddress is: " + ipaddress);
+        }
 
-        var data ={ssid:ssid, password:password};
+        //*Getting subnetmask
+        var subnetmask = document.getElementById("subnetmask").value;
+        if( subnetmask == "0.0.0.0" )
+        {
+            console.log("dynamic");
+        }
+        else
+        {
+            console.log("subnetmask is: " + subnetmask);
+        }
+
+        //*Getting Ipaddress
+        var gateway = document.getElementById("gateway").value;
+        if( gateway == "0.0.0.0" )
+        {
+            console.log("dynamic");
+        }
+        else
+        {
+            console.log("gateway is: " + gateway);
+        }
+
+
+
+        var data ={ssid:ssid, password:password, ipaddress:ipaddress, subnetmask:subnetmask, gateway:gateway};
         var xhr = new XMLHttpRequest();
         var url = "/settings";
 

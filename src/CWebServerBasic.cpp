@@ -192,6 +192,7 @@ ESP8266WebServer *CWebServerBasic::getESP8266WebServer()
  */
 void CWebServerBasic::setupWebPageAPMode()
 {
+  
   Serial.println("setupWebPageAPMode()");
   this->getESP8266WebServer()->on("/"         , HTTP_GET,   handleAPModeRootPage);
   this->getESP8266WebServer()->on("/settings" , HTTP_POST,  handleAPModeSettingsUpdate);

@@ -45,6 +45,8 @@ public:
     void wifiConnect();
     void handleSettingsUpdate();
 
+    void deleteWifiConfigAndStartAP();
+
     CWebServerBasic &getWebserver();
 
     void setResetPin(const uint8_t _pin);
@@ -53,8 +55,13 @@ public:
     //INIT WIFI SSID + PASSWORD
     //
     //
-    const char *INIT_SSID = "WIFI ESP8266";
-    const char *INIT_APPASSWORD = "12345678";
+    const char *INIT_SSID        = "WIFI ESP8266";
+    const char *INIT_AP_PASSWORD =     "12345678";
+
+    const uint8_t AP_MODE_IPADDRESS   [4]  = { 192, 168, 0   ,1};
+    const uint8_t AP_MODE_SUBNETMASK  [4]  = { 255, 255, 255 ,0};
+    const uint8_t AP_MODE_GATEWAY     [4]  = { 192, 168, 0   ,1};
+
     bool m_isInAPMode;
 
     void init(uint8_t _resetPin);
@@ -69,7 +76,13 @@ private:
     String* m_pPassword;
     bool m_isStaticIP;
 
+    IPAddress getAPModeIP();
+    IPAddress getAPModeSubnetMask();
+    IPAddress getAPModeGateway();
+
     CWebServerBasic& m_WebServer;
+
+    // IPAddress* getIPAddressByString(String *_pIpAsStr);
 
     bool m_isWIFIConnected;
     uint8_t m_WifiResetPin;

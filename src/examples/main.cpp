@@ -28,6 +28,7 @@ void setup() {
       // Please let me know if u got a solution for that problem !
       
       wifi.init(PIN_WIFI_RESET);
+      
      
       
 }

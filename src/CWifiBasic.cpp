@@ -14,7 +14,10 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-CWifiBasic::CWifiBasic(CWebServerBasic &_webserver) : m_WebServer(_webserver)
+#define debug 1 
+
+CWifiBasic::CWifiBasic(CWebServerBasic &_webserver) : 
+m_WebServer(_webserver)
 {
 }
 CWifiBasic::~CWifiBasic()
@@ -117,14 +120,22 @@ uint8_t CWifiBasic::getResetPin()
  */
 void CWifiBasic::wifiConnect()
 {
+
+    this->m_pIP         = nullptr;
+    this->m_pSubnetmask = nullptr;
+    this->m_pGateway    = nullptr;
     WiFi.softAPdisconnect(true);
     WiFi.disconnect();
     delay(500);
     this->m_isInAPMode = false;
 
-    const char *_ssid = "";
-    const char *_pass = "";
+    const char *pSSIDChar        = "";
+    const char *pPasswordChar    = "";
+    const char *pIPAddressChar   = "";
+    const char *pSubnetmaskChar  = "";
+    const char *pGatewayChar     = "";
     String str;
+
     if (CFileSystem::getInstance().readFile("/config.json", &str))
     {
 
@@ -132,16 +143,102 @@ void CWifiBasic::wifiConnect()
         JsonObject &jObject = JsonBuffer.parseObject(str);
         if (jObject.success())
         {
-            _ssid = jObject["ssid"];
-            _pass = jObject["password"];
-            this->m_pSSID = new String(_ssid);
-            this->m_pPassword = new String(_pass);
+            pSSIDChar           = jObject["ssid"      ];
+            pPasswordChar       = jObject["password"  ];
+            
 
+
+            this->m_pSSID       = new String(pSSIDChar);
+            this->m_pPassword   = new String(pPasswordChar);
+
+#ifdef debug 
+Serial.print("SSID:");
+Serial.println(*this->m_pSSID);
+
+Serial.print("Password:");
+Serial.println(*this->m_pPassword);
+#endif 
+
+            //*** Getting IP Address.....
+            if (jObject["ipaddress"].success())
+            {
+                pIPAddressChar   = jObject["ipaddress"];
+                String IpAddrStr = String(pIPAddressChar);
+                this->m_pIP      = new IPAddress();
+                if(!this->m_pIP->fromString(IpAddrStr))
+                {
+                    //Something failed....
+                   this->deleteWifiConfigAndStartAP();
+                }
+                
+            }
+            else
+            {
+                //Do this if not IP is not Setted....
+                this->m_pIP = new IPAddress(this->getAPModeIP());
+            }
+#ifdef debug
+                Serial.print("setted :");
+                Serial.println(this->m_pIP->toString());
+#endif
+
+            //*** Getting SubnetMask.....
+            if (jObject["subnetmask"].success())
+            {
+                pSubnetmaskChar   = jObject["subnetmask"];
+                String SubnetmaskStr = String(pSubnetmaskChar);
+                this->m_pSubnetmask      = new IPAddress();
+                if(!this->m_pSubnetmask->fromString(SubnetmaskStr))
+                {
+                    //Something failed....
+                   this->deleteWifiConfigAndStartAP();
+                }
+            }
+            else
+            {
+                //Do this if not IP is not Setted....
+                this->m_pSubnetmask = new IPAddress(this->getAPModeSubnetMask());
+            }
+
+#ifdef debug
+                Serial.print("setted :");
+                Serial.println(this->m_pSubnetmask->toString());
+#endif
+            //*** Getting Gateway.....
+            if (jObject["gateway"].success())
+            {
+                pGatewayChar   = jObject["gateway"];
+                String GatewayStr = String(pGatewayChar);
+                this->m_pGateway      = new IPAddress();
+                if(!this->m_pGateway->fromString(GatewayStr))
+                {
+                    //Something failed....
+                   this->deleteWifiConfigAndStartAP();
+                }
+            }
+            else
+            {
+                //Do this if not IP is not Setted....
+                this->m_pGateway = new IPAddress(this->getAPModeGateway());
+            }
+
+#ifdef debug
+                Serial.print("setted :");
+                Serial.println(this->m_pGateway->toString());
+#endif
+            Serial.println();
             Serial.print("Try to connect to:");
-            Serial.print(_ssid);
+            Serial.print(pSSIDChar);
+            Serial.print("using ip:");
+            Serial.println(m_pIP->toString());
+            Serial.print("using mask:");
+            Serial.println(m_pSubnetmask->toString());
+            Serial.print("using gateway :");
+            Serial.println(m_pGateway->toString());
 
             WiFi.mode(WIFI_STA);
-            WiFi.begin(_ssid, _pass);
+            WiFi.begin(pSSIDChar, pPasswordChar);
+            WiFi.config(*this->m_pIP, *this->m_pGateway, *this->m_pSubnetmask);
             this->m_isInAPMode = false;
 
             while (WiFi.status() != WL_CONNECTED)
@@ -154,46 +251,58 @@ void CWifiBasic::wifiConnect()
                     break;
                 }
             }
-        }
-        
+        }   
     }
     if (WiFi.status() == WL_CONNECTED)
     {
         //Wifi is connected to config wifi setup
-        this->m_pIP = new IPAddress(WiFi.localIP());
-        this->m_pSubnetmask = new IPAddress(WiFi.subnetMask());
-        this->m_pGateway = new IPAddress(WiFi.gatewayIP());
+        //Old should not be removed
+        // this->m_pIP = new IPAddress(WiFi.localIP());
+        // this->m_pSubnetmask = new IPAddress(WiFi.subnetMask());
+        // this->m_pGateway = new IPAddress(WiFi.gatewayIP());
 
+    #ifdef debug
+    if (this->m_pIP != nullptr && this->m_pSubnetmask != nullptr && this->m_pGateway != nullptr )
+    {
         Serial.print("IpAddress is:");
         Serial.println(this->m_pIP->toString());
         Serial.print("SubnetMask is:");
         Serial.println(this->m_pSubnetmask->toString());
         Serial.print("Gateway is:");
         Serial.println(this->m_pGateway->toString());
+    }
+    
         
+    #endif 
     }
     else
     {
         //IMPORTANT - PASSWORD MUST BE MIN LENGHT BY 8 CHARS!
         const char *initssid = INIT_SSID;
-        const char *initpassword = INIT_APPASSWORD;
+        const char *initpassword = INIT_AP_PASSWORD;
+    #ifdef debug
         Serial.print("name:");
         Serial.println(initssid);
         Serial.print("password:");
         Serial.println(initpassword);
         Serial.println("--------");
         Serial.println("AP Mode - no config file found or created...");
+    #endif 
         WiFi.mode(WIFI_AP);
 
         this->m_isInAPMode = true;
 
         if (this->m_pIP == nullptr || this->m_pSubnetmask == nullptr || this->m_pGateway == nullptr)
         {
+        #ifdef debug
+            Serial.println("Setting up Static IP for AP Mode.");    
+        #endif
             this->m_isStaticIP = true;
-            WiFi.softAPConfig(IPAddress(192, 168, 0, 1), IPAddress(192, 168, 0, 1), IPAddress(255, 255, 255, 0));
+            WiFi.softAPConfig(this->getAPModeIP(), this->getAPModeGateway(), this->getAPModeSubnetMask());
         }
         else
         {
+            //**IF ip is setup before it can be configured your own Settings - else it will use std setting
             this->m_isStaticIP = false;
             WiFi.softAPConfig(*this->m_pIP, *this->m_pSubnetmask, *this->m_pGateway);
         }
@@ -206,11 +315,35 @@ void CWifiBasic::wifiConnect()
         // if DNSServer is started with "*" for domain name, it will reply with
         // provided IP to all DNS request
         this->m_dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
-        this->m_dnsServer.start(DNS_PORT, "*", IPAddress(192,168,1,1));
+        this->m_dnsServer.start(DNS_PORT, "*", this->getAPModeIP());
     }
 
     WiFi.printDiag(Serial);
 
+    if (this->m_pIP == nullptr && this->m_pSubnetmask == nullptr && this->m_pGateway == nullptr)
+    {
+        this->m_pIP         = new IPAddress(WiFi.localIP());
+        this->m_pSubnetmask = new IPAddress(WiFi.subnetMask());
+        this->m_pGateway    = new IPAddress(WiFi.gatewayIP());
+    }
+    else
+    {
+        //**Seems like init nullptr failed 
+    }
+
+
+
+    #ifdef debug
+    if (this->m_pIP != nullptr && this->m_pSubnetmask != nullptr && this->m_pGateway != nullptr )
+    {
+        Serial.print("IpAddress is:");
+        Serial.println(this->m_pIP->toString());
+        Serial.print("SubnetMask is:");
+        Serial.println(this->m_pSubnetmask->toString());
+        Serial.print("Gateway is:");
+        Serial.println(this->m_pGateway->toString());
+    }
+    #endif
     if(this->isInAPMode())
     {
         this->getWebserver().setupWebPageAPMode();
@@ -269,25 +402,9 @@ bool CWifiBasic::handleResetButton()
 
     if (buttonPressed)
     {
-        Serial.println("Deleting WIFI SETUP");
 
-        if (this->m_isInAPMode == false && this->m_pIP != nullptr && this->m_pSubnetmask != nullptr && this->m_pGateway != nullptr)
-        {
-            delete this->m_pIP;
-            delete this->m_pSubnetmask;
-            delete this->m_pGateway;
-        }
-        
-
-        this->m_isInAPMode = true;
-
-        String str;
-        if (CFileSystem::getInstance().readFile("/config.json", &str))
-        {
-            CFileSystem::getInstance().deleteFile("/config.json");
-            Serial.println("Remove Config file...");
-            this->wifiConnect();
-        }
+        //Delete Wifi Settings and create AP
+        this->deleteWifiConfigAndStartAP();
     }
     else
     {
@@ -295,3 +412,86 @@ bool CWifiBasic::handleResetButton()
     }
     
 }
+
+
+//**This is actually not good to return a full instance instead of a ptr
+IPAddress CWifiBasic::getAPModeIP()
+{
+#ifdef debug
+    Serial.println("getAPModeIP() called");
+#endif
+    return IPAddress(AP_MODE_IPADDRESS[0],AP_MODE_IPADDRESS[1],AP_MODE_IPADDRESS[2],AP_MODE_IPADDRESS[3]);
+}
+IPAddress CWifiBasic::getAPModeSubnetMask()
+{
+#ifdef debug
+    Serial.println("getAPModeSubnetMask() called");
+#endif
+    return IPAddress(AP_MODE_SUBNETMASK[0],AP_MODE_SUBNETMASK[1],AP_MODE_SUBNETMASK[2],AP_MODE_SUBNETMASK[3]);
+}
+IPAddress CWifiBasic::getAPModeGateway()
+{
+#ifdef debug
+    Serial.println("getAPModeGateway() called");
+#endif
+    return IPAddress(AP_MODE_GATEWAY[0],AP_MODE_GATEWAY[1],AP_MODE_GATEWAY[2],AP_MODE_GATEWAY[3]);
+}
+
+/**
+ * @brief Delete WifiSettings & ConfigFile - start in AP Mode 
+ * 
+ */
+void CWifiBasic::deleteWifiConfigAndStartAP()
+{
+    Serial.println("Deleting WIFI SETUP");
+    if (this->m_isInAPMode == false && this->m_pIP != nullptr && this->m_pSubnetmask != nullptr && this->m_pGateway != nullptr)
+    {
+        delete this->m_pIP;
+        delete this->m_pSubnetmask;
+        delete this->m_pGateway;
+    }
+
+    this->m_isInAPMode = true;
+
+    String str;
+    if (CFileSystem::getInstance().readFile("/config.json", &str))
+    {
+        CFileSystem::getInstance().deleteFile("/config.json");
+        Serial.println("Remove Config file...");
+        this->wifiConnect();
+    }
+}
+
+// IPAddress* CWifiBasic::getIPAddressByString(String *_pIpAsStr)
+// {
+
+
+// #ifdef debug
+//     Serial.print("IpReceived getIPAddressByString()");
+//     Serial.println(*_pIpAsStr);
+// #endif 
+//     int size = _pIpAsStr->length();
+
+//     const char *pCstr = _pIpAsStr->c_str();
+
+// #ifdef debug
+//     Serial.print("pCstr getIPAddressByString()");
+//     Serial.println(*pCstr);
+// #endif 
+
+//   uint8_t ip[4];
+//   sscanf(pCstr, "%u.%u.%u.%u", &ip[0], &ip[1], &ip[2], &ip[3]);
+
+// #ifdef debug
+//   Serial.print("IP[0]:");
+//   Serial.print(ip[0]);
+//   Serial.print("IP[1]:");
+//   Serial.print(ip[1]);
+//   Serial.print("IP[2]:");
+//   Serial.print(ip[2]);
+//   Serial.print("IP[3]:");
+//   Serial.print(ip[3]);
+// #endif
+//   IPAddress* pAddr = new IPAddress(ip[0],ip[1],ip[2],ip[3]);
+//   return pAddr;
+// }
