@@ -231,4 +231,3 @@ void CWebServerBasic::setupAdditionalWebPageNormalMode()
   //implement your additional settings via a subclass!
   Serial.println("setupAdditionalAPModeWebPages() - This should be not called! - Maybe you dont override this method");
 }
-}
