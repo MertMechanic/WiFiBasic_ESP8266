@@ -200,7 +200,7 @@ void CWebServerBasic::setupWebPageAPMode()
   // replay to all requests with same HTML
   this->getESP8266WebServer()->onNotFound(handleAPModeRootPage);
   setupAdditionalAPModeWebPages();
-  this->start();
+  this->getESP8266WebServer()->begin();
 }
 
 /**
@@ -216,19 +216,19 @@ void CWebServerBasic::setupWebPageNormalMode()
   this->getESP8266WebServer()->on(
       "/dofirmwareupdate", HTTP_POST, handledofirmwareupdateCheckErrors, handledofirmwareupdate);
   this->setupAdditionalWebPageNormalMode();
-  this->start();
-}
 
-void CWebServerBasic::start()
-{
   this->getESP8266WebServer()->begin();
 }
+
 
 void CWebServerBasic::setupAdditionalAPModeWebPages()
 {
   //implement your additional settings via a subclass!
+  Serial.println("setupAdditionalAPModeWebPages() - This should be not called! - Maybe you dont override this method");
 }
 void CWebServerBasic::setupAdditionalWebPageNormalMode()
 {
   //implement your additional settings via a subclass!
+  Serial.println("setupAdditionalAPModeWebPages() - This should be not called! - Maybe you dont override this method");
+}
 }

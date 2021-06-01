@@ -31,7 +31,6 @@ public:
     virtual void setupAdditionalAPModeWebPages();
     virtual void setupAdditionalWebPageNormalMode();
 
-    void start();
 
 private:
     ESP8266WebServer m_Webserver;
