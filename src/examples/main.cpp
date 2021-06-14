@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "CWifiBasic.h"
 
-
+#include "CAddtionalWebpages.h"
 //Preset routes are:
 
 //AP Mode IP = 192.168.0.1
@@ -17,6 +17,7 @@
 
 
 CWifiBasic& wifi = CWifiBasic::getInstance();
+CAddtionalWebpages& additional = CAddtionalWebpages::getInstance();
 #define PIN_WIFI_RESET D8
 
 void setup() {
@@ -27,7 +28,7 @@ void setup() {
       // if pin is not GND the WIFI config will reset
       // Please let me know if u got a solution for that problem !
       
-      wifi.init(PIN_WIFI_RESET);
+      wifi.init(PIN_WIFI_RESET, &additional);
       
      
       

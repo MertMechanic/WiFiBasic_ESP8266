@@ -5,6 +5,18 @@
 #include "WebServerDataBasic.h"
 #include "ArduinoJson.h"
 
+
+
+/**
+ * @brief Used Standard routes are:
+ * In AP Mode:
+ *  /
+ *  /settings
+ * In Normal Mode:
+ * /login
+ * /update
+ */
+
 class CWebServerBasic 
 {
 //Stingleton START
@@ -28,8 +40,6 @@ public:
     void setupWebPageAPMode();
     void setupWebPageNormalMode();
 
-    virtual void setupAdditionalAPModeWebPages();
-    virtual void setupAdditionalWebPageNormalMode();
 
 
 private:

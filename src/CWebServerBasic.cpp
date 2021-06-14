@@ -49,9 +49,7 @@ void handleAPModeSettingsUpdate()
     Serial.println("send status ok");
     #endif
     delay(200);
-
-
-
+    
     //Restart ESP after getting settings updated!
     ESP.restart();
 }
@@ -60,10 +58,9 @@ void handleAPModeSettingsUpdate()
 void handleRootPage()
 {
     //Configure your rootpage here ....
-    Serial.println("try to send servus moiiiin...");
+    Serial.println("handleRootPage() from CWebServerBasic");
     CWebServerBasic &Server = CWebServerBasic::getInstance();
-    // Server.getESP8266WebServer()->send_P(200, "text/html", index);
-    Server.getESP8266WebServer()->send_P(200, "text/plain", "hallo Servus Moin!");
+    Server.getESP8266WebServer()->send_P(200, "text/plain", "handleRootPage() from CWebServerBasic");
 }
 
 
@@ -199,8 +196,7 @@ void CWebServerBasic::setupWebPageAPMode()
 
   // replay to all requests with same HTML
   this->getESP8266WebServer()->onNotFound(handleAPModeRootPage);
-  setupAdditionalAPModeWebPages();
-  this->getESP8266WebServer()->begin();
+
 }
 
 /**
@@ -210,24 +206,11 @@ void CWebServerBasic::setupWebPageAPMode()
 void CWebServerBasic::setupWebPageNormalMode()
 {
   Serial.println("setupWebPageNormalMode()");
-  this->getESP8266WebServer()->on("/"       , HTTP_GET, handleRootPage);
+  // this->getESP8266WebServer()->on("/"       , HTTP_GET, handleRootPage);
   this->getESP8266WebServer()->on("/login"  , HTTP_GET, handleLogin);
   this->getESP8266WebServer()->on("/update" , HTTP_GET, handleUpdate);
   this->getESP8266WebServer()->on(
       "/dofirmwareupdate", HTTP_POST, handledofirmwareupdateCheckErrors, handledofirmwareupdate);
-  this->setupAdditionalWebPageNormalMode();
-
-  this->getESP8266WebServer()->begin();
 }
 
 
-void CWebServerBasic::setupAdditionalAPModeWebPages()
-{
-  //implement your additional settings via a subclass!
-  Serial.println("setupAdditionalAPModeWebPages() - This should be not called! - Maybe you dont override this method");
-}
-void CWebServerBasic::setupAdditionalWebPageNormalMode()
-{
-  //implement your additional settings via a subclass!
-  Serial.println("setupAdditionalAPModeWebPages() - This should be not called! - Maybe you dont override this method");
-}

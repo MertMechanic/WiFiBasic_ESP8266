@@ -12,6 +12,9 @@
 #include "CWebServerBasic.h"
 #include <DNSServer.h>
 
+
+class CAddtionalWebpages;
+
 class CWifiBasic
 {
 
@@ -64,13 +67,14 @@ public:
 
     bool m_isInAPMode;
 
-    void init(uint8_t _resetPin);
+    //void init(uint8_t _resetPin);
+    void init(uint8_t _resetPin,  CAddtionalWebpages* _pAdditional = nullptr);
+    
     
     bool handleResetButton();
 
     DNSServer* getDNSServer();
     void run();
-    
 private:
     String* m_pSSID;
     String* m_pPassword;
@@ -79,9 +83,11 @@ private:
     IPAddress getAPModeIP();
     IPAddress getAPModeSubnetMask();
     IPAddress getAPModeGateway();
+    
+    void configureWebServerPages();
 
     CWebServerBasic& m_WebServer;
-
+    CAddtionalWebpages* m_pAddtionalWebpages;
     // IPAddress* getIPAddressByString(String *_pIpAsStr);
 
     bool m_isWIFIConnected;
