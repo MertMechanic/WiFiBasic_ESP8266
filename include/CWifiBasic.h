@@ -13,7 +13,7 @@
 #include <DNSServer.h>
 
 
-class CAddtionalWebpages;
+class CAdditionalWebpages;
 
 class CWifiBasic
 {
@@ -68,7 +68,7 @@ public:
     bool m_isInAPMode;
 
     //void init(uint8_t _resetPin);
-    void init(uint8_t _resetPin,  CAddtionalWebpages* _pAdditional = nullptr);
+    void init(uint8_t _resetPin,  CAdditionalWebpages* _pAdditional = nullptr);
     
     
     bool handleResetButton();
@@ -86,8 +86,8 @@ private:
     
     void configureWebServerPages();
 
-    CWebServerBasic& m_WebServer;
-    CAddtionalWebpages* m_pAddtionalWebpages;
+    CWebServerBasic&     m_WebServer;
+    CAdditionalWebpages* m_pAdditionalWebpages;
     // IPAddress* getIPAddressByString(String *_pIpAsStr);
 
     bool m_isWIFIConnected;

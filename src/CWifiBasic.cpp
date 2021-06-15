@@ -14,7 +14,7 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-#include "CAddtionalWebpages.h"
+#include "CAdditionalWebpages.h"
 
 #define debug 1 
 
@@ -77,11 +77,11 @@ String *CWifiBasic::getPassword()
  * 
  * @param _resetPin Reset pin will reset the settings
  */
-void CWifiBasic::init(const uint8_t _resetPin, CAddtionalWebpages* _pAdditional)
+void CWifiBasic::init(const uint8_t _resetPin, CAdditionalWebpages* _pAdditional)
 {
     this->setResetPin(_resetPin);
     this->wifiConnect();
-    this->m_pAddtionalWebpages = _pAdditional;
+    this->m_pAdditionalWebpages = _pAdditional;
     this->configureWebServerPages();
 }
 
@@ -89,21 +89,19 @@ void CWifiBasic::configureWebServerPages()
 {
     if (this->isInAPMode())
     {
-            CWebServerBasic::getInstance().setupWebPageAPMode();
-        if (this->m_pAddtionalWebpages != nullptr)
+        CWebServerBasic::getInstance().setupWebPageAPMode();
+        if (this->m_pAdditionalWebpages != nullptr)
         {
-            this->m_pAddtionalWebpages->setupAdditionalWebpagesAPMode();
+            this->m_pAdditionalWebpages->setupAdditionalWebpagesAPMode();
         }
-
     }
     else
     {
-            CWebServerBasic::getInstance().setupWebPageNormalMode();
-        if (this->m_pAddtionalWebpages != nullptr)
+        CWebServerBasic::getInstance().setupWebPageNormalMode();
+        if (this->m_pAdditionalWebpages != nullptr)
         {
-            this->m_pAddtionalWebpages->setupAdditionalWebPageNormalMode();
+            this->m_pAdditionalWebpages->setupAdditionalWebPageNormalMode();
         }
-
     }
 
     CWebServerBasic::getInstance().getESP8266WebServer()->begin();

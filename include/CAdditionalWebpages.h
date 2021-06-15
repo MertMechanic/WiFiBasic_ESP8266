@@ -5,7 +5,7 @@
  * @brief Customize this for implementing your own webpagesroutes
  *        inherit  from this class and override the virutal methods
  */
-class CAddtionalWebpages 
+class CAdditionalWebpages 
 {
 //Stingleton START
 public:
@@ -19,8 +19,8 @@ public:
 //     void operator=(CAddtionalWebpages const &) = delete;
 
 // private:
-    CAddtionalWebpages();
-    ~CAddtionalWebpages();
+    CAdditionalWebpages();
+    ~CAdditionalWebpages();
 //Stingleton END
 public:
     virtual void setupAdditionalWebPageNormalMode();

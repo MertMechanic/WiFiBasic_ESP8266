@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include "CAddtionalWebpages.h"
+#include "CAdditionalWebpages.h"
 
 /**
  * @brief Example for Custommizing your own webpages
  * 
  */
-class CCustomAddionalWebpages : public CAddtionalWebpages
+class CCustomAdditionalWebpages : public CAdditionalWebpages
 {
     public:
     void setupAdditionalWebPageNormalMode() override;

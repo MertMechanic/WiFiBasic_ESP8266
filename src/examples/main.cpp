@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include "CWifiBasic.h"
 
-#include "CAddtionalWebpages.h"
-#include "CCustomAddionalWebpages.h"
+#include "CAdditionalWebpages.h"
+#include "CCustomAdditionalWebpages.h"
 //Preset routes are:
 
 //AP Mode IP = 192.168.0.1
@@ -29,8 +29,8 @@ void setup() {
       // if pin is not GND the WIFI config will reset
       // Please let me know if u got a solution for that problem !
       
-      CCustomAddionalWebpages pages;
-      CAddtionalWebpages* p = (CAddtionalWebpages*)&pages;      
+      CCustomAdditionalWebpages pages;
+      CAdditionalWebpages* p = (CAdditionalWebpages*)&pages;      
       // wifi.init(PIN_WIFI_RESET, &additional);
       wifi.init(PIN_WIFI_RESET, p);
       

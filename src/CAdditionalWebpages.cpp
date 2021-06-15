@@ -1,14 +1,14 @@
 
 
-#include "CAddtionalWebpages.h"
+#include "CAdditionalWebpages.h"
 #include "CWebServerBasic.h"
 #define debug 1
 
 
-CAddtionalWebpages::CAddtionalWebpages()
+CAdditionalWebpages::CAdditionalWebpages()
 {
 }
-CAddtionalWebpages::~CAddtionalWebpages()
+CAdditionalWebpages::~CAdditionalWebpages()
 {
 }
 
@@ -31,7 +31,7 @@ void handleRoot()
  * @brief Setup your Custom Webpages here - and create a Method for the routing
  * 
  */
-void CAddtionalWebpages::setupAdditionalWebPageNormalMode()
+void CAdditionalWebpages::setupAdditionalWebPageNormalMode()
 {
 #ifdef debug
     Serial.println("Setting up setupAdditionalWebPageNormalMode()");
@@ -45,7 +45,7 @@ void CAddtionalWebpages::setupAdditionalWebPageNormalMode()
  * @brief Setup your Custom Webpages here - and create a Method for the routing
  * 
  */
-void CAddtionalWebpages::setupAdditionalWebpagesAPMode()
+void CAdditionalWebpages::setupAdditionalWebpagesAPMode()
 {
     #ifdef debug
     Serial.println("Setting up setupAdditionalWebpagesAPMode()");

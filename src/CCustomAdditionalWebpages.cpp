@@ -1,13 +1,12 @@
 
-
-#include "CCustomAddionalWebpages.h"
+#include "CCustomAdditionalWebpages.h"
 #include "CWebServerBasic.h"
 #define debug 1
 
 
 void handleFetchDataForDashBoardCCustomAddionalWebpages()
 {
-    Serial.println("fetchData CCustomAddionalWebpages... Dashboard");
+    Serial.println("fetchData CCustomAdditionalWebpages... Dashboard");
     CWebServerBasic::getInstance().getESP8266WebServer()->send(200, "text/plain", "Dashboard");
 }
 
@@ -21,10 +20,10 @@ void handleRootCCustomAddionalWebpages()
  * @brief Setup your Custom Webpages here - and create a Method for the routing
  * 
  */
-void CCustomAddionalWebpages::setupAdditionalWebPageNormalMode()
+void CCustomAdditionalWebpages::setupAdditionalWebPageNormalMode()
 {
 #ifdef debug
-    Serial.println("Setting up CCustomAddionalWebpages setupAdditionalWebPageNormalMode()");
+    Serial.println("Setting up CCustomAdditionalWebpages setupAdditionalWebPageNormalMode()");
 #endif
 
     CWebServerBasic::getInstance().getESP8266WebServer()->on("/", handleRootCCustomAddionalWebpages);
@@ -35,7 +34,7 @@ void CCustomAddionalWebpages::setupAdditionalWebPageNormalMode()
  * @brief Setup your Custom Webpages here - and create a Method for the routing
  * 
  */
-void CCustomAddionalWebpages::setupAdditionalWebpagesAPMode()
+void CCustomAdditionalWebpages::setupAdditionalWebpagesAPMode()
 {
     #ifdef debug
     Serial.println("Setting up CCustomAddionalWebpages setupAdditionalWebpagesAPMode()");
