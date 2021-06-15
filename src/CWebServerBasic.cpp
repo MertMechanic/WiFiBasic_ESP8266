@@ -16,6 +16,17 @@
 //
 
 
+
+/**
+ * @brief Used Standard routes are:
+ * In AP Mode:
+ *  /
+ *  /settings
+ * In Normal Mode:
+ * /login
+ * /update
+ */
+
 JsonObject& getJsonObjectFromResponse()
 {
     String data = CWebServerBasic::getInstance().getESP8266WebServer()->arg("plain");
@@ -212,5 +223,4 @@ void CWebServerBasic::setupWebPageNormalMode()
   this->getESP8266WebServer()->on(
       "/dofirmwareupdate", HTTP_POST, handledofirmwareupdateCheckErrors, handledofirmwareupdate);
 }
-
 
