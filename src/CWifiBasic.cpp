@@ -150,9 +150,9 @@ void CWifiBasic::wifiConnect()
     this->m_pIP         = nullptr;
     this->m_pSubnetmask = nullptr;
     this->m_pGateway    = nullptr;
-    // WiFi.softAPdisconnect(true);
-    // WiFi.disconnect();
-    // delay(200);
+    WiFi.softAPdisconnect(true);
+    WiFi.disconnect();
+    delay(200);
     this->m_isInAPMode = false;
 
     const char *pSSIDChar        = "";
@@ -414,37 +414,3 @@ void CWifiBasic::deleteWifiConfigAndStartAP()
         this->wifiConnect();
     }
 }
-
-// IPAddress* CWifiBasic::getIPAddressByString(String *_pIpAsStr)
-// {
-
-
-// #ifdef debug
-//     Serial.print("IpReceived getIPAddressByString()");
-//     Serial.println(*_pIpAsStr);
-// #endif 
-//     int size = _pIpAsStr->length();
-
-//     const char *pCstr = _pIpAsStr->c_str();
-
-// #ifdef debug
-//     Serial.print("pCstr getIPAddressByString()");
-//     Serial.println(*pCstr);
-// #endif 
-
-//   uint8_t ip[4];
-//   sscanf(pCstr, "%u.%u.%u.%u", &ip[0], &ip[1], &ip[2], &ip[3]);
-
-// #ifdef debug
-//   Serial.print("IP[0]:");
-//   Serial.print(ip[0]);
-//   Serial.print("IP[1]:");
-//   Serial.print(ip[1]);
-//   Serial.print("IP[2]:");
-//   Serial.print(ip[2]);
-//   Serial.print("IP[3]:");
-//   Serial.print(ip[3]);
-// #endif
-//   IPAddress* pAddr = new IPAddress(ip[0],ip[1],ip[2],ip[3]);
-//   return pAddr;
-// }
