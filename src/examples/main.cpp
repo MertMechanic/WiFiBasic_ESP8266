@@ -30,14 +30,9 @@ void setup() {
       CCustomAdditionalWebpages pages;
       CAdditionalWebpages* p = (CAdditionalWebpages*)&pages;    
       wifi.init(PIN_WIFI_RESET, p);
-
-      
 }
 
 void loop() {
-
-
-
   // put your main code here, to run repeatedly:
     CWifiBasic::getInstance().run();
 

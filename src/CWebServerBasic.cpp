@@ -27,7 +27,7 @@
  * /update
  */
 
-static JsonObject& getJsonObjectFromResponse()
+JsonObject& getJsonObjectFromResponse()
 {
     String data = CWebServerBasic::getInstance().getESP8266WebServer()->arg("plain");
 
