@@ -27,7 +27,7 @@
  * /update
  */
 
-JsonObject& getJsonObjectFromResponse()
+static JsonObject& getJsonObjectFromResponse()
 {
     String data = CWebServerBasic::getInstance().getESP8266WebServer()->arg("plain");
 
@@ -39,14 +39,14 @@ JsonObject& getJsonObjectFromResponse()
     return root;
 }
 
-void handleAPModeRootPage()
+static void handleAPModeRootPage()
 {
     Serial.println("try to send wifisetupwebpage...");
     CWebServerBasic &Server = CWebServerBasic::getInstance();
     Server.getESP8266WebServer()->send_P(200, "text/html", wifisetupwebpage);
 }
 
-void handleAPModeSettingsUpdate()
+static void handleAPModeSettingsUpdate()
 {
 
     Serial.println("handleSettingsUpdate called...");
@@ -66,7 +66,7 @@ void handleAPModeSettingsUpdate()
 }
 
 
-void handleRootPage()
+static void handleRootPage()
 {
     //Configure your rootpage here ....
     Serial.println("handleRootPage() from CWebServerBasic");
@@ -76,7 +76,7 @@ void handleRootPage()
 
 
 
-void setupOTA()
+static void setupOTA()
 {
     // Port defaults to 8266
   // ArduinoOTA.setPort(8266);
@@ -128,27 +128,27 @@ void setupOTA()
   Serial.println(WiFi.localIP());
 }
 
-void handleLogin()
+static void handleLogin()
 {
       CWebServerBasic::getInstance().getESP8266WebServer()->sendHeader("Connection", "close");
       CWebServerBasic::getInstance().getESP8266WebServer()->send(200, "text/html", loginIndex);
 }
 
-void handleUpdate()
+static void handleUpdate()
 {
       CWebServerBasic::getInstance().getESP8266WebServer()->sendHeader("Connection", "close");
       CWebServerBasic::getInstance().getESP8266WebServer()->send(200, "text/html", updateIndex);
 }
 
 
-void handledofirmwareupdate()
+static void handledofirmwareupdate()
 {
     CWebServerBasic::getInstance().getESP8266WebServer()->sendHeader("Connection", "close");
     CWebServerBasic::getInstance().getESP8266WebServer()->send(200, "text/plain", (Update.hasError()) ? "FAIL" : "OK");
     ESP.restart();
 } 
 
-void handledofirmwareupdateCheckErrors()
+static void handledofirmwareupdateCheckErrors()
 {
   HTTPUpload &upload = CWebServerBasic::getInstance().getESP8266WebServer()->upload();
   if (upload.status == UPLOAD_FILE_START)
@@ -216,8 +216,10 @@ void CWebServerBasic::setupWebPageAPMode()
  */
 void CWebServerBasic::setupWebPageNormalMode()
 {
+
+  setupOTA();
   Serial.println("setupWebPageNormalMode()");
-  // this->getESP8266WebServer()->on("/"       , HTTP_GET, handleRootPage);
+  this->getESP8266WebServer()->on("/"       , HTTP_GET, handleRootPage);
   this->getESP8266WebServer()->on("/login"  , HTTP_GET, handleLogin);
   this->getESP8266WebServer()->on("/update" , HTTP_GET, handleUpdate);
   this->getESP8266WebServer()->on(

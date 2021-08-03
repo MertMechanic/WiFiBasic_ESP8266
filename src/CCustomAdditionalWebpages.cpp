@@ -4,13 +4,13 @@
 #define debug 1
 
 
-void handleFetchDataForDashBoardCCustomAddionalWebpages()
+static void handleFetchDataForDashBoardCCustomAddionalWebpages()
 {
     Serial.println("fetchData CCustomAdditionalWebpages... Dashboard");
     CWebServerBasic::getInstance().getESP8266WebServer()->send(200, "text/plain", "Dashboard");
 }
 
-void handleRootCCustomAddionalWebpages()
+static void handleRootCCustomAddionalWebpages()
 {
     //Configure your rootpage here ....
     CWebServerBasic::getInstance().getESP8266WebServer()->send_P(200, "text/html", "Root");
