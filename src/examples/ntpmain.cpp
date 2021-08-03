@@ -1,26 +1,26 @@
 
-#include <Arduino.h>
-#include "CWifiBasic.h"
+// #include <Arduino.h>
+// #include "CWifiBasic.h"
 
-#include "CAdditionalWebpages.h"
-#include "CCustomAdditionalWebpages.h"
+// #include "CAdditionalWebpages.h"
+// #include "CCustomAdditionalWebpages.h"
 
 
-#include <NTPClient.h>
-#include <WiFiUdp.h>
+// #include <NTPClient.h>
+// #include <WiFiUdp.h>
 
-// Replace with your network credentials
-const char *ssid     = "Wallway";
-const char *password = "W4!!g455e";
+// // Replace with your network credentials
+// const char *ssid     = "Wallway";
+// const char *password = "W4!!g455e";
 
-// Define NTP Client to get time
+// // Define NTP Client to get time
   
-WiFiUDP* pNtpUDP;
-NTPClient* pTimeClient;
+// WiFiUDP* pNtpUDP;
+// NTPClient* pTimeClient;
 
 
-CWifiBasic& wifi = CWifiBasic::getInstance();
-#define PIN_WIFI_RESET D8
+// CWifiBasic& wifi = CWifiBasic::getInstance();
+// #define PIN_WIFI_RESET D8
 
 // #define normal
 
