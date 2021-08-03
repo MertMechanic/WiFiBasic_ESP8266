@@ -81,8 +81,8 @@ void CWifiBasic::init(const uint8_t _resetPin, CAdditionalWebpages* _pAdditional
 {
     this->setResetPin(_resetPin);
     this->wifiConnect();
-    // this->m_pAdditionalWebpages = _pAdditional;
-    // this->configureWebServerPages();
+    this->m_pAdditionalWebpages = _pAdditional;
+    this->configureWebServerPages();
 }
 
 void CWifiBasic::configureWebServerPages()
