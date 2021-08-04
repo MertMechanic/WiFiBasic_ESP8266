@@ -96,10 +96,13 @@ void CWifiBasic::configureWebServerPages()
     }
     else
     {
-        CWebServerBasic::getInstance().setupWebPageNormalMode();
         if (this->m_pAdditionalWebpages != nullptr)
         {
             this->m_pAdditionalWebpages->setupAdditionalWebPageNormalMode();
+        }
+        else
+        {
+            CWebServerBasic::getInstance().setupWebPageNormalMode();
         }
     }
 
