@@ -36,7 +36,7 @@ protected:
 
 public:
     String getIpAdress();
-    void setIpAdress(int, int, int, int);
+    void setIpAdress(int _part3, int _part2, int _part1, int _part0);
 
     void setSSID(String *_pSSID);
     void setPassword(String *_psk);
@@ -48,7 +48,7 @@ public:
     void wifiConnect();
     void handleSettingsUpdate();
 
-    void deleteWifiConfigAndStartAP();
+    void deleteWifiConfig();
 
     CWebServerBasic &getWebserver();
 
