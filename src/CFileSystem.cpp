@@ -9,8 +9,6 @@
 
 CFileSystem::CFileSystem()
 {
-
-
     this->m_pFS = &LittleFS;
 
     if (!this->m_pFS->begin())
