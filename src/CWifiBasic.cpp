@@ -488,8 +488,7 @@ void CWifiBasic::deleteWifiConfig()
  * @brief @brief Return the current ip address of device as string
  * 
  * 
- * @param _pDestination 
- * @return String* 
+ * @return String
  */
 String CWifiBasic::getIpAddress()
 {
