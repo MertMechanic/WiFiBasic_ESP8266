@@ -2,7 +2,7 @@
 
 #include "CAdditionalWebpages.h"
 #include "CWebServerBasic.h"
-#define debug 1
+// #define debug 1
 
 
 CAdditionalWebpages::CAdditionalWebpages()

@@ -35,7 +35,7 @@ protected:
 //BASIC SINGLETON END
 
 public:
-    String getIpAdress();
+    String* getIpAddress();
     void setIpAdress(int _part3, int _part2, int _part1, int _part0);
 
     void setSSID(String *_pSSID);

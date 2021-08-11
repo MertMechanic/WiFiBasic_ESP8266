@@ -6,6 +6,7 @@
 
 #include "ArduinoOTA.h"
 
+#define debug
 
 CFileSystem::CFileSystem()
 {
@@ -13,7 +14,9 @@ CFileSystem::CFileSystem()
 
     if (!this->m_pFS->begin())
     {
+#ifdef debug
         Serial.println("LITTLEFS Mount Failed");
+#endif
         return;
     }
 }
@@ -119,7 +122,9 @@ void CFileSystem::readFile(const char *path)
     Serial.println("- read from file:");
     while (file.available())
     {
+#ifdef debug
         Serial.write(file.read());
+#endif
     }
     file.close();
 }
@@ -141,10 +146,11 @@ bool CFileSystem::readFile(const char *path, String* _pDestinationString)
     
     while (file.available())
     {
+#ifdef debug
         *_pDestinationString = file.readString();
         Serial.write(_pDestinationString->c_str());
+#endif
     }
-
 
     file.close();
 
