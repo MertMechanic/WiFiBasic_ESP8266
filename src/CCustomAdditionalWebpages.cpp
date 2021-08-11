@@ -6,7 +6,9 @@
 
 static void handleFetchDataForDashBoardCCustomAddionalWebpages()
 {
+#ifdef debug
     Serial.println("fetchData CCustomAdditionalWebpages... Dashboard");
+#endif
     CWebServerBasic::getInstance().getESP8266WebServer()->send(200, "text/plain", "Dashboard");
 }
 
@@ -36,7 +38,7 @@ void CCustomAdditionalWebpages::setupAdditionalWebPageNormalMode()
  */
 void CCustomAdditionalWebpages::setupAdditionalWebpagesAPMode()
 {
-    #ifdef debug
+#ifdef debug
     Serial.println("Setting up CCustomAddionalWebpages setupAdditionalWebpagesAPMode()");
 #endif
     CWebServerBasic::getInstance().getESP8266WebServer()->on("/", handleRootCCustomAddionalWebpages);

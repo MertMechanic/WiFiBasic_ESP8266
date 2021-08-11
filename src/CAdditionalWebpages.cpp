@@ -14,7 +14,9 @@ CAdditionalWebpages::~CAdditionalWebpages()
 
 void handleFetchDataForDashBoard()
 {
+#ifdef debug
     Serial.println("fetchData... Dashboard");
+#endif
     CWebServerBasic::getInstance().getESP8266WebServer()->send(200, "text/plain", "This is the Dashboard Page <br> Configured by Class setupAdditionalWebPageNormalMode");
 }
 
